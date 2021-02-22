@@ -1,0 +1,1 @@
+enum PhoneAuthMode {EnterPhone, Verify}
