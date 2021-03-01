@@ -90,6 +90,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             onStepCancel: () => Navigator.pop(context),
             type: StepperType.vertical,
             steps: [
+              ///Step 1
               Step(
                 isActive: true,
                 state: checkoutModel.currentStep == 0
@@ -236,6 +237,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+              ///Step 2
               Step(
                 isActive: checkoutModel.isOptionsCompleted,
                 state: checkoutModel.currentStep == 1
@@ -333,6 +335,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+              ///Step 3
               Step(
                 isActive: checkoutModel.isOptionsCompleted,
                 state: checkoutModel.currentStep == 2

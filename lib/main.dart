@@ -7,7 +7,6 @@ import 'package:grocery_app/ui/intro_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   ///initialize [Firebase] services
   await Firebase.initializeApp();
   runApp(
@@ -35,7 +34,9 @@ class MyApp extends ConsumerWidget {
         accentColor: accentColor,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-              primary: accentColor, shape: RoundedRectangleBorder()),
+            primary: accentColor,
+            shape: RoundedRectangleBorder(),
+          ),
         ),
         bottomSheetTheme: BottomSheetThemeData(backgroundColor: accentColor),
         buttonTheme: ButtonThemeData(

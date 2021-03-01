@@ -5,11 +5,11 @@ import 'package:grocery_app/core/view_models/cart_view_model/cart_view_model_pro
 import 'package:grocery_app/ui/cart_page.dart';
 import 'package:grocery_app/ui/widgets/product_image_viewer.dart';
 
-class ProductPage extends ConsumerWidget {
+class ProductPage extends StatelessWidget {
   final Product product;
   ProductPage({this.product});
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(

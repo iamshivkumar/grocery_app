@@ -37,19 +37,19 @@ class IntroScreen extends ConsumerWidget {
             ///here are 3 [SlideTile]
             ///TODO: Edit [title],["desc"],["imagePath"] is [SlideTiles] as per your store services, statements,...
             SlideTile(
-              imagePath: "assets/undraw_online_groceries_a02y.svg",
+              imagePath: "assets/vectorpaint.png",
               title: "Search",
               desc:
                   "Discover Restaurants offering the best fast food food near you on Foodwa",
             ),
             SlideTile(
-              imagePath: "assets/undraw_online_groceries_a02y.svg",
+              imagePath: "assets/vectorpaint.png",
               title: "Order",
               desc:
                   "Our veggie plan is filled with delicious seasonal vegetables, whole grains, beautiful cheeses and vegetarian proteins",
             ),
             SlideTile(
-              imagePath: "assets/undraw_online_groceries_a02y.svg",
+              imagePath: "assets/vectorpaint.png",
               title: "Eat",
               desc:
                   "Food delivery or pickup from local restaurants, Explore restaurants that deliver near you.",
@@ -86,6 +86,7 @@ class IntroScreen extends ConsumerWidget {
                     : _buildPageIndicator(false),
             ],
           ),
+
           ///[2] is (total number of [SlideTile]) - 1
           introModel.pageIndex != 2
               ? TextButton(

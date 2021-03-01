@@ -20,5 +20,3 @@ final areasPolygonsProvider = FutureProvider.autoDispose<Set<Polygon>>(
     }).toSet();
   },
 );
-
-// var s = GoogleMap(initialCameraPosition: ).polygons.contains(LatLng(latitude, longitude))

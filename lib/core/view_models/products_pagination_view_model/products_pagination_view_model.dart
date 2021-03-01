@@ -14,6 +14,7 @@ class ProductsViewModel extends ChangeNotifier {
 
     _snapshots = await _firestore
         .collection("products")
+        .where("active",isEqualTo: true)
         .where(category == "Popular" ? "popular" : "category",
             isEqualTo: category == "Popular" ? true : category)
         .orderBy("name")
@@ -32,6 +33,7 @@ class ProductsViewModel extends ChangeNotifier {
       _snapshots = _snapshots +
           await _firestore
               .collection("products")
+              .where("active",isEqualTo: true)
               .where(category == "Popular" ? "popular" : "category",
                   isEqualTo: category == "Popular" ? true : category)
               .orderBy("name")
