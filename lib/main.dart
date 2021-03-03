@@ -7,6 +7,7 @@ import 'package:grocery_app/ui/intro_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   ///initialize [Firebase] services
   await Firebase.initializeApp();
   runApp(
@@ -18,10 +19,34 @@ Future<void> main() async {
 }
 
 class MyApp extends ConsumerWidget {
+  TextTheme _buildShrineTextTheme(TextTheme base) {
+    return base
+        .copyWith(
+          headline5: base.headline5.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+          headline6: base.headline6.copyWith(fontSize: 18.0),
+          caption: base.caption.copyWith(
+            fontWeight: FontWeight.w400,
+            fontSize: 14.0,
+          ),
+          bodyText1: base.bodyText1.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0,
+          ),
+        )
+        .apply(
+          displayColor: Colors.black,
+          bodyColor: Colors.black,
+          fontFamily: 'Rubik',
+        );
+  }
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     var init = watch(initializer);
     final Color accentColor = Color(0xFF4E598C);
+    var base = ThemeData.light();
     return MaterialApp(
       color: Colors.white,
       title: 'Grocery',
@@ -38,6 +63,9 @@ class MyApp extends ConsumerWidget {
             shape: RoundedRectangleBorder(),
           ),
         ),
+        textTheme: _buildShrineTextTheme(base.textTheme),
+        primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
+        accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
         bottomSheetTheme: BottomSheetThemeData(backgroundColor: accentColor),
         buttonTheme: ButtonThemeData(
           shape: RoundedRectangleBorder(

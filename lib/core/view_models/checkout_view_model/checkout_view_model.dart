@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_app/core/models/address.dart';
 import 'package:grocery_app/core/models/cartProduct.dart';
+import 'package:grocery_app/core/models/settings.dart';
 import 'package:grocery_app/core/service/date.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -12,8 +14,13 @@ class CheckoutViewModel extends ChangeNotifier {
   final List<CartProduct> cartProducts;
   final double price;
   final int items;
+  final StoreSettings settings;
   CheckoutViewModel(
-      {this.locationAddressList, this.cartProducts, this.price, this.items});
+      {this.locationAddressList,
+      this.cartProducts,
+      this.price,
+      this.items,
+      this.settings});
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User _user = FirebaseAuth.instance.currentUser;
@@ -24,24 +31,17 @@ class CheckoutViewModel extends ChangeNotifier {
   String _deliveryByStartTime;
   LocationAddress locationAddress;
   String paymentMethod;
-  double delivery = 0;
-  double serviceTax = 0;
-  double serviceTaxPercentage = 0;
+
+  double get serviceTax => double.parse(
+      (price * settings.serviceTaxPercentage / 100).toStringAsFixed(1));
+
   double walletAmount = 0;
   double remainedWalletAmount = 0;
 
   double get total =>
-      double.parse((price + delivery + serviceTax).toStringAsFixed(1)) -
+      double.parse(
+          (price + settings.deliveryCharge + serviceTax).toStringAsFixed(1)) -
       walletAmount;
-
-  void initializeForCheckout() {
-    _firestore.collection('settings').doc('settings').get().then((value) {
-      delivery = value.data()['delivery'];
-      serviceTaxPercentage = value.data()['tax%'];
-      serviceTax =
-          double.parse((price * serviceTaxPercentage / 100).toStringAsFixed(1));
-    });
-  }
 
   bool get isOptionsCompleted =>
       deliveryBy != null && deliveryDay != null && locationAddress != null;
@@ -106,9 +106,13 @@ class CheckoutViewModel extends ChangeNotifier {
 
   Razorpay _razorpay = Razorpay();
 
-  void _handlePaymentError(PaymentFailureResponse response) {}
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(msg: response.message);
+  }
 
-  void _handleExternalWallet(ExternalWalletResponse response) {}
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(msg: response.walletName);
+  }
 //HDLsL5DxJOc4dxdk0lrQTww2
   Future openCheckout(double amount) async {
     var options = {
@@ -126,7 +130,9 @@ class CheckoutViewModel extends ChangeNotifier {
 
     try {
       _razorpay.open(options);
-    } catch (e) {}
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.code);
+    }
   }
 
   String getCode(int length) {
@@ -143,31 +149,38 @@ class CheckoutViewModel extends ChangeNotifier {
   }
 
   Future _placeOrder({bool paid, String paymentID}) async {
-    _firestore.collection('orders').add(
-      {
-        'customerId': _user.uid,
-        'customerName': "Shivkumar Konade",
-        'customerMobile': _user.phoneNumber,
-        'customerAddress': locationAddress.value,
-        'price': price,
-        'items': items,
-        'payment': paid ? "Paid" : "Not Paid",
-        'paymentMethod': paymentMethod,
-        'products': cartProducts.map((e) => e.toJson()).toList(),
-        'delivery': delivery,
-        'tax': serviceTax,
-        'total': total,
-        'date': deliveryDay,
-        'deliveryBy': deliveryBy,
-        'timestamp': Timestamp.now(),
-        'code': getCode(6),
-        'status': "Pending",
-        "location":
-            GeoPoint(locationAddress.latitude, locationAddress.longitude),
-        "paymentID": paymentID ?? "-",
-        "walletAmount": walletAmount,
-      },
-    );
+    try {
+      _firestore.collection('orders').add(
+        {
+          'customerId': _user.uid,
+          'customerName': "Shivkumar Konade",
+          'customerMobile': _user.phoneNumber,
+          'customerAddress': locationAddress.value,
+          'price': price,
+          'items': items,
+          'payment': paid ? "Paid" : "Not Paid",
+          'paymentMethod': paymentMethod,
+          'products': cartProducts.map((e) => e.toJson()).toList(),
+          'delivery': settings.deliveryCharge,
+          'tax': serviceTax,
+          'total': total,
+          'date': deliveryDay,
+          'deliveryBy': deliveryBy,
+          'timestamp': Timestamp.now(),
+          'code': getCode(6),
+          'status': "Pending",
+          "location":
+              GeoPoint(locationAddress.latitude, locationAddress.longitude),
+          "paymentID": paymentID ?? "-",
+          "walletAmount": walletAmount,
+        },
+      );
+      Fluttertoast.showToast(msg: "Order Successful.");
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: "Something error try later. if amount debited Contact us");
+      return;
+    }
     cartProducts.forEach((element) {
       _firestore
           .collection("products")
@@ -177,12 +190,10 @@ class CheckoutViewModel extends ChangeNotifier {
 
     if (walletAmount != 0) {
       _firestore.collection('wallets').doc(_user.uid).update(
-            remainedWalletAmount == 0
-                ? {"amount": remainedWalletAmount, "paymentIDs": []}
-                : {
-                    "amount": remainedWalletAmount,
-                  },
-          );
+        {
+          "amount": remainedWalletAmount,
+        },
+      );
     }
   }
 
@@ -191,6 +202,7 @@ class CheckoutViewModel extends ChangeNotifier {
       await openCheckout(total);
       _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
           (PaymentSuccessResponse response) {
+        Fluttertoast.showToast(msg: "Payment Successful.");
         _placeOrder(paid: true, paymentID: response.paymentId);
         callback();
       });
@@ -215,6 +227,7 @@ class CheckoutViewModel extends ChangeNotifier {
         .collection("orders")
         .doc(orderId)
         .update({"status": "Cancelled"});
+    Fluttertoast.showToast(msg: "Order Cancled");
     if (paymentMethod == "Razorpay") {
       var docRef = _firestore.collection("wallets").doc(_user.uid);
       docRef.get().then((value) {
@@ -241,6 +254,10 @@ class CheckoutViewModel extends ChangeNotifier {
           });
         }
       });
+      Fluttertoast.showToast(
+          msg:
+              "Amount added to your wallet. You can request for refund (Profile>>Refund)",
+          timeInSecForIosWeb: 1);
     }
   }
 }

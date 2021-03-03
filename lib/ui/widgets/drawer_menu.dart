@@ -11,10 +11,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DrawerMenu extends StatelessWidget {
   final VoidCallback close;
-  
+
   DrawerMenu({this.close});
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     var authModel = context.read(authViewModelProvider);
     ListTile listTile({@required String text, @required Widget page}) {
       return ListTile(
@@ -43,8 +44,15 @@ class DrawerMenu extends StatelessWidget {
       color: Theme.of(context).accentColor,
       child: SafeArea(
         child: Theme(
-          data: ThemeData.dark(),
-                  child: ListView(
+          data: ThemeData.dark().copyWith(
+            textTheme: theme.textTheme.apply(
+              displayColor: Colors.white,
+              bodyColor: Colors.white
+            ),
+            primaryTextTheme: theme.primaryTextTheme,
+            accentTextTheme: theme.accentTextTheme
+          ),
+          child: ListView(
             children: [
               authModel.user != null
                   ? Column(
@@ -166,7 +174,7 @@ class DrawerMenu extends StatelessWidget {
                         close();
                         await Future.delayed(Duration(milliseconds: 300));
                         var user = await LoginSheet(context).show();
-                        if (user!=null && user.displayName == null) {
+                        if (user != null && user.displayName == null) {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(

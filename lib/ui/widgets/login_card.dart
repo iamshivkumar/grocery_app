@@ -54,7 +54,7 @@ class LoginCard extends ConsumerWidget {
                     child: !authModel.loading
                         ? MaterialButton(
                             onPressed: () {
-                              authModel.verifyPhoneNumber(
+                              authModel.sendOTP(
                                 onVerify: () =>
                                     Navigator.pop(context, authModel.user),
                               );
@@ -94,7 +94,7 @@ class LoginCard extends ConsumerWidget {
                         ? MaterialButton(
                             onPressed: () async {
                               var user =
-                                  await authModel.signInWithPhoneNumber();
+                                  await authModel.verifyOTP();
                               Navigator.pop(context, user);
                             },
                             colorBrightness: Brightness.dark,

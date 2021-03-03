@@ -16,7 +16,9 @@ class TwoTextRow extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(text2),
+          child: Text(text2,style: TextStyle(
+            color: Theme.of(context).primaryColor
+          ),),
         ),
       ],
     );

@@ -8,18 +8,8 @@ import 'package:grocery_app/core/view_models/checkout_view_model/checkout_view_m
 import 'package:grocery_app/ui/widgets/custom_radio_listtile.dart';
 import 'package:grocery_app/ui/widgets/two_text_row.dart';
 
-class CheckoutPage extends StatefulWidget {
-  @override
-  _CheckoutPageState createState() => _CheckoutPageState();
-}
-
-class _CheckoutPageState extends State<CheckoutPage> {
-  Date date = Date();
-  @override
-  void initState() {
-    context.read(checkoutViewModelProvider).initializeForCheckout();
-    super.initState();
-  }
+class CheckoutPage extends StatelessWidget {
+  final Date date = Date();
 
   @override
   Widget build(BuildContext context) {
@@ -237,6 +227,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+
               ///Step 2
               Step(
                 isActive: checkoutModel.isOptionsCompleted,
@@ -312,10 +303,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 TwoTextRow(
                                     text1: 'Delivery',
                                     text2: '₹' +
-                                        checkoutModel.delivery.toString()),
+                                        checkoutModel.settings.deliveryCharge.toString()),
                                 TwoTextRow(
                                     text1:
-                                        'Service Tax (${checkoutModel.serviceTaxPercentage}%)',
+                                        'Service Tax (${checkoutModel.settings.serviceTaxPercentage}%)',
                                     text2: '₹' +
                                         checkoutModel.serviceTax.toString()),
                                 TwoTextRow(
@@ -335,6 +326,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+
               ///Step 3
               Step(
                 isActive: checkoutModel.isOptionsCompleted,

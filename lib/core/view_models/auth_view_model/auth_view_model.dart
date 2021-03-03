@@ -19,8 +19,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void verifyPhoneNumber(
-      {VoidCallback onVerify, VoidCallback onCodeSent}) async {
+  void sendOTP({VoidCallback onVerify, VoidCallback onCodeSent}) async {
     loading = true;
     notifyListeners();
     try {
@@ -31,15 +30,15 @@ class AuthViewModel extends ChangeNotifier {
           notifyListeners();
           user = (await _auth.signInWithCredential(credential)).user;
           onVerify();
-          Fluttertoast.showToast(
-              msg: "Login successful", backgroundColor: Color(0xFF4E598C));
+          Fluttertoast.showToast(msg: "Sign in successful");
         },
         verificationFailed: (FirebaseAuthException e) {
           if (e.code == 'invalid-phone-number') {
             Fluttertoast.showToast(
-                msg: "The provided phone number is not valid.",
-                backgroundColor: Color(0xFF4E598C));
-          }
+              msg: "The provided phone number is not valid.",
+            );
+          } else
+            Fluttertoast.showToast(msg: e.code);
         },
         codeSent: (String verificationId, int resendToken) async {
           loading = false;
@@ -58,7 +57,7 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<User> signInWithPhoneNumber() async {
+  Future<User> verifyOTP() async {
     loading = true;
     notifyListeners();
     try {
@@ -70,7 +69,7 @@ class AuthViewModel extends ChangeNotifier {
       user = (await _auth.signInWithCredential(credential)).user;
 
       Fluttertoast.showToast(
-        msg: "Login successful",
+        msg: "Sign in successful",
         backgroundColor: Color(0xFF4E598C),
       );
     } catch (e) {
@@ -86,7 +85,7 @@ class AuthViewModel extends ChangeNotifier {
     user = null;
   }
 
-  Future<void> refundRequestWalletAmount() async{
+  Future<void> refundRequestWalletAmount() async {
     FirebaseFirestore.instance.collection("wallets").doc(user.uid).update({
       "refundRequested": true,
       "name": user.displayName,
