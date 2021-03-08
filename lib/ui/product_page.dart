@@ -26,7 +26,7 @@ class ProductPage extends StatelessWidget {
         ],
         title: Text(product.name),
       ),
-      bottomSheet: SizedBox(
+      bottomNavigationBar: SizedBox(
         height: 56,
         child: Material(
           color: Colors.white,

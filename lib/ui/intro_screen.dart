@@ -38,21 +38,21 @@ class IntroScreen extends ConsumerWidget {
             ///TODO: Edit [title],["desc"],["imagePath"] is [SlideTiles] as per your store services, statements,...
             SlideTile(
               imagePath: "assets/vectorpaint.png",
-              title: "Search",
+              title: "Need Groceries Now?",
               desc:
-                  "Discover Restaurants offering the best fast food food near you on Foodwa",
+                  "Select wide range of products from fresh fruits to delicious snacks",
             ),
             SlideTile(
-              imagePath: "assets/vectorpaint.png",
-              title: "Order",
+              imagePath: "assets/vectorpaint (2).png",
+              title: "Hassle Free Payments",
               desc:
-                  "Our veggie plan is filled with delicious seasonal vegetables, whole grains, beautiful cheeses and vegetarian proteins",
+                  "Pay as per your convenience, we accept razorpay payments and cash on delivery",
             ),
             SlideTile(
-              imagePath: "assets/vectorpaint.png",
-              title: "Eat",
+              imagePath: "assets/vectorpaint (1).png",
+              title: "Fast Doorstep Delivery",
               desc:
-                  "Food delivery or pickup from local restaurants, Explore restaurants that deliver near you.",
+                  "Our delivery executive will deliver your order in under 24 hours",
             )
           ],
         ),
@@ -138,7 +138,7 @@ class SlideTile extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset("assets/vectorpaint.png", height: 250),
+            child: Image.asset(imagePath, height: 250),
           ),
           SizedBox(
             height: 24,

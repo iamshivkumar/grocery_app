@@ -173,6 +173,7 @@ class OrderDetailsPage extends StatelessWidget {
                                         paymentMethod: order.paymentMethod,
                                         price: order.totalPrice,
                                         walletAmount: order.walletAmount);
+                                        
                                 context.refresh(ordersListFutureProvider);
                                 context.refresh(walletFutureProvider);
                                 Navigator.pop(context);

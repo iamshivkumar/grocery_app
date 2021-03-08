@@ -4,7 +4,7 @@ import 'package:grocery_app/core/view_models/auth_view_model/auth_view_model_pro
 import 'package:grocery_app/ui/address_list_page.dart';
 import 'package:grocery_app/ui/orders_page.dart';
 import 'package:grocery_app/ui/profile_page.dart';
-import 'package:grocery_app/ui/widgets/login_card.dart';
+import 'package:grocery_app/ui/widgets/sign_in_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,13 +21,12 @@ class DrawerMenu extends StatelessWidget {
       return ListTile(
         title: Text(text),
         onTap: () async {
-          var user = authModel.user;
           close();
-          if (user == null) {
+          if (authModel.user == null) {
             await Future.delayed(Duration(milliseconds: 300));
-            user = await LoginSheet(context).show();
+            await SignInSheet(context).show();
           }
-          if (user != null) {
+          if (context.read(authViewModelProvider).user != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -45,13 +44,10 @@ class DrawerMenu extends StatelessWidget {
       child: SafeArea(
         child: Theme(
           data: ThemeData.dark().copyWith(
-            textTheme: theme.textTheme.apply(
-              displayColor: Colors.white,
-              bodyColor: Colors.white
-            ),
-            primaryTextTheme: theme.primaryTextTheme,
-            accentTextTheme: theme.accentTextTheme
-          ),
+              textTheme: theme.textTheme
+                  .apply(displayColor: Colors.white, bodyColor: Colors.white),
+              primaryTextTheme: theme.primaryTextTheme,
+              accentTextTheme: theme.accentTextTheme),
           child: ListView(
             children: [
               authModel.user != null
@@ -161,7 +157,7 @@ class DrawerMenu extends StatelessWidget {
               ),
               authModel.user != null
                   ? ListTile(
-                      title: Text('Logout'),
+                      title: Text('Sign Out'),
                       onTap: () async {
                         await authModel.signOut();
                         close();
@@ -169,11 +165,11 @@ class DrawerMenu extends StatelessWidget {
                       leading: Icon(Icons.logout),
                     )
                   : ListTile(
-                      title: Text('Login'),
+                      title: Text('Sign In'),
                       onTap: () async {
                         close();
                         await Future.delayed(Duration(milliseconds: 300));
-                        var user = await LoginSheet(context).show();
+                        var user = await SignInSheet(context).show();
                         if (user != null && user.displayName == null) {
                           await Navigator.push(
                             context,

@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
     var authModel = context.read(authViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Profile'),
+        title: Text('My Profile'),
       ),
       body: SingleChildScrollView(
         child: Padding(

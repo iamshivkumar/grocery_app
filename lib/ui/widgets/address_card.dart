@@ -15,6 +15,13 @@ class AddressCard extends StatefulWidget {
 
 class _AddressCardState extends State<AddressCard> {
   GoogleMapController _controller;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var addressModel = context.read(addressViewModelProvider);

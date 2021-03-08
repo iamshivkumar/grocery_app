@@ -4,25 +4,21 @@ import 'package:grocery_app/core/view_models/auth_view_model/auth_view_model_pro
 import 'package:grocery_app/core/enums/phone_auth_mode.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class LoginSheet {
+class SignInSheet {
   final BuildContext context;
-  LoginSheet(this.context);
+  SignInSheet(this.context);
   Future<dynamic> show() async {
     return await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => SingleChildScrollView(
-        child: Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: LoginCard(),
-        ),
+        child: SignInCard(),
       ),
     );
   }
 }
 
-class LoginCard extends ConsumerWidget {
+class SignInCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     var authModel = watch(authViewModelProvider);
@@ -35,17 +31,18 @@ class LoginCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ListTile(
-                    title: Text('Login'),
+                    title: Text('Sign In'),
                     subtitle: Text('Enter your phone number to proceed.'),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: TextField(
+                      maxLength: 10,
                       autofocus: true,
                       controller: authModel.phoneNumberController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.call), prefixText: '+91'),
+                          prefixIcon: Icon(Icons.call), prefixText: '+91 '),
                     ),
                   ),
                   Padding(
@@ -55,15 +52,19 @@ class LoginCard extends ConsumerWidget {
                         ? MaterialButton(
                             onPressed: () {
                               authModel.sendOTP(
-                                onVerify: () =>
-                                    Navigator.pop(context, authModel.user),
+                                onVerify: () => Navigator.pop(context),
                               );
                             },
                             colorBrightness: Brightness.dark,
                             color: Theme.of(context).accentColor,
                             child: Text('CONTINUE'),
                           )
-                        : Center(child: CircularProgressIndicator()),
+                        : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                   ),
                 ],
               )
@@ -72,7 +73,9 @@ class LoginCard extends ConsumerWidget {
                 children: [
                   ListTile(
                     leading: IconButton(
-                        icon: Icon(Icons.arrow_back_ios), onPressed: () {}),
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: authModel.back,
+                    ),
                     title: Text('Verify Phone Number'),
                     subtitle: Text('Enter OTP to verify phone number'),
                   ),
@@ -82,6 +85,7 @@ class LoginCard extends ConsumerWidget {
                       onChanged: null,
                       controller: authModel.smsController,
                       appContext: context,
+                      autoDisposeControllers: false,
                       length: 6,
                       enablePinAutofill: true,
                       autoFocus: true,
@@ -93,16 +97,18 @@ class LoginCard extends ConsumerWidget {
                     child: !authModel.loading
                         ? MaterialButton(
                             onPressed: () async {
-                              var user =
-                                  await authModel.verifyOTP();
-                              Navigator.pop(context, user);
+                              await authModel.verifyOTP();
+                              Navigator.pop(context);
                             },
                             colorBrightness: Brightness.dark,
                             color: Theme.of(context).accentColor,
                             child: Text('VERIFY'),
                           )
                         : Center(
-                            child: CircularProgressIndicator(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
                   ),
                 ],

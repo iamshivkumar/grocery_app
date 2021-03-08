@@ -14,12 +14,12 @@ class AuthViewModel extends ChangeNotifier {
   bool loading = false;
   PhoneAuthMode phoneAuthMode = PhoneAuthMode.EnterPhone;
 
-  void setMode() {
-    phoneAuthMode = PhoneAuthMode.Verify;
+  void back() {
+    phoneAuthMode = PhoneAuthMode.EnterPhone;
     notifyListeners();
   }
 
-  void sendOTP({VoidCallback onVerify, VoidCallback onCodeSent}) async {
+  void sendOTP({VoidCallback onVerify}) async {
     loading = true;
     notifyListeners();
     try {
@@ -39,14 +39,17 @@ class AuthViewModel extends ChangeNotifier {
             );
           } else
             Fluttertoast.showToast(msg: e.code);
+          loading = false;
+          notifyListeners();
         },
         codeSent: (String verificationId, int resendToken) async {
           loading = false;
           phoneAuthMode = PhoneAuthMode.Verify;
           _verificationId = verificationId;
+
           notifyListeners();
         },
-        timeout: const Duration(seconds: 30),
+        timeout: const Duration(seconds: 0),
         codeAutoRetrievalTimeout: (String verificationId) {
           _verificationId = verificationId;
           loading = false;
@@ -57,7 +60,7 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<User> verifyOTP() async {
+  Future<void> verifyOTP() async {
     loading = true;
     notifyListeners();
     try {

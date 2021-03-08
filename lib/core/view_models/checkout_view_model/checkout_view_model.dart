@@ -113,6 +113,7 @@ class CheckoutViewModel extends ChangeNotifier {
   void _handleExternalWallet(ExternalWalletResponse response) {
     Fluttertoast.showToast(msg: response.walletName);
   }
+
 //HDLsL5DxJOc4dxdk0lrQTww2
   Future openCheckout(double amount) async {
     var options = {

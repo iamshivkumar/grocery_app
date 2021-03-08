@@ -1,5 +1,3 @@
-
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,7 +12,8 @@ import 'package:grocery_app/ui/checkout_page.dart';
 import 'package:grocery_app/ui/orders_page.dart';
 import 'profile_page.dart';
 import 'widgets/cart_product_card.dart';
-import 'widgets/login_card.dart';
+import 'widgets/sign_in_sheet.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 class CartPage extends ConsumerWidget {
   @override
@@ -57,7 +56,7 @@ class CartPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text('Your Cart'),
       ),
-      bottomSheet: SizedBox(
+      bottomNavigationBar: SizedBox(
         height: 56,
         child: Material(
           color: Colors.white,
@@ -103,49 +102,52 @@ class CartPage extends ConsumerWidget {
                 }
 
                 ///it access state from [AuthViewModel] by using [authViewModelProvider] as [authModel]
-                var authModel = context.read(authViewModelProvider);
-                var user = authModel.user;
-                if (user == null) {
-                  await Future.delayed(Duration(milliseconds: 300));
-                  user = await LoginSheet(context).show();
+
+                if (context.read(authViewModelProvider).user == null) {
+                  await SignInSheet(context).show();
                 }
-                if (user != null) {
-                  if (user.displayName == null) {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(),
-                      ),
-                    );
-                  }
-                  var addressModel = context.read(addressViewModelProvider);
-                  if (addressModel.locationAddressList.isEmpty) {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddressPage(),
-                      ),
-                    );
-                  }
-                  cartModel.initializeForCheckout(
-                      itemsValue: items,
-                      priceValue: price,
-                      products: cartProducts);
-                  bool ordered = await Navigator.push(
+                var user = context.read(authViewModelProvider).user;
+                if (user == null) {
+                  return;
+                }
+                if (user.displayName == null) {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CheckoutPage(),
+                      builder: (context) => ProfilePage(),
                     ),
                   );
-                  if (ordered != null && ordered) {
-                   await context.refresh(ordersListFutureProvider);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => OrdersPage(),
-                      ),
-                    );
-                  }
+                }
+                var addressModel = context.read(addressViewModelProvider);
+                if (addressModel.locationAddressList.isEmpty) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddressPage(),
+                    ),
+                  );
+                }
+                if (addressModel.locationAddressList.isEmpty) {
+                  return;
+                }
+                cartModel.initializeForCheckout(
+                    itemsValue: items,
+                    priceValue: price,
+                    products: cartProducts);
+                bool ordered = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CheckoutPage(),
+                  ),
+                );
+                if (ordered != null && ordered) {
+                  await context.refresh(ordersListFutureProvider);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => OrdersPage(),
+                    ),
+                  );
                 }
               },
               color: Theme.of(context).accentColor,
