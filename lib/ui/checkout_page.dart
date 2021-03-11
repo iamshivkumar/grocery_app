@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grocery_app/core/service/date.dart';
-import 'package:grocery_app/core/futures/wallet_future_provider.dart';
+import 'package:grocery_app/core/streams/wallet_stream_provider.dart';
 import 'package:grocery_app/core/view_models/cart_view_model/cart_view_model_provider.dart';
 import 'package:grocery_app/core/view_models/checkout_view_model/checkout_view_model_provider.dart';
 import 'package:grocery_app/ui/widgets/custom_radio_listtile.dart';
@@ -16,7 +16,7 @@ class CheckoutPage extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         var checkoutModel = watch(checkoutViewModelProvider);
-        var walletStream = watch(walletFutureProvider);
+        var walletFuture = watch(walletStreamProvider);
         return Scaffold(
           appBar: AppBar(
             title: Text('Place Order'),
@@ -263,7 +263,7 @@ class CheckoutPage extends StatelessWidget {
                               );
                             }).toList(),
                           ),
-                          walletStream.when(
+                          walletFuture.when(
                             data: (wallet) => Material(
                               color: Theme.of(context).primaryColorLight,
                               child: ListTile(
@@ -303,7 +303,8 @@ class CheckoutPage extends StatelessWidget {
                                 TwoTextRow(
                                     text1: 'Delivery',
                                     text2: '₹' +
-                                        checkoutModel.settings.deliveryCharge.toString()),
+                                        checkoutModel.settings.deliveryCharge
+                                            .toString()),
                                 TwoTextRow(
                                     text1:
                                         'Service Tax (${checkoutModel.settings.serviceTaxPercentage}%)',

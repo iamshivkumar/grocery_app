@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/core/futures/wallet_future_provider.dart';
+import 'package:grocery_app/core/streams/wallet_stream_provider.dart';
 import 'package:grocery_app/core/view_models/auth_view_model/auth_view_model_provider.dart';
 import 'package:grocery_app/ui/address_list_page.dart';
 import 'package:grocery_app/ui/orders_page.dart';
@@ -11,13 +11,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DrawerMenu extends StatelessWidget {
   final VoidCallback close;
-
   DrawerMenu({this.close});
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     var authModel = context.read(authViewModelProvider);
-    ListTile listTile({@required String text, @required Widget page}) {
+    ListTile listTile(
+        {@required String text,
+        @required Widget page,
+        @required IconData iconData}) {
       return ListTile(
         title: Text(text),
         onTap: () async {
@@ -35,7 +37,7 @@ class DrawerMenu extends StatelessWidget {
             );
           }
         },
-        leading: Icon(Icons.shopping_basket_outlined),
+        leading: Icon(iconData),
       );
     }
 
@@ -77,7 +79,7 @@ class DrawerMenu extends StatelessWidget {
                               ),
                               Consumer(
                                 builder: (context, watch, child) {
-                                  var data = watch(walletFutureProvider);
+                                  var data = watch(walletStreamProvider);
                                   return data.when(
                                     data: (wallet) => Text(
                                       "₹" + wallet.amount.toString(),
@@ -101,6 +103,7 @@ class DrawerMenu extends StatelessWidget {
                   : SizedBox(),
               Divider(),
               listTile(
+                iconData: Icons.shopping_basket_outlined,
                 text: "My Orders",
                 page: OrdersPage(),
               ),
@@ -118,6 +121,7 @@ class DrawerMenu extends StatelessWidget {
                 },
               ),
               listTile(
+                iconData: Icons.person_outline,
                 text: "My Profile",
                 page: ProfilePage(),
               ),

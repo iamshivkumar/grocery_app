@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/models/wallet.dart';
 
-final walletFutureProvider = FutureProvider.autoDispose<Wallet>(
+final walletStreamProvider = StreamProvider<Wallet>(
   (ref) {
     User _user = FirebaseAuth.instance.currentUser;
-    ref.maintainState = true;
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    return _firestore.collection('wallets').doc(_user.uid).get().then(
-          (value) => Wallet.fromFirestore(value),
-        );
+    return _firestore
+        .collection('wallets')
+        .doc(_user.uid)
+        .snapshots()
+        .map((event) => Wallet.fromFirestore(event));
   },
 );

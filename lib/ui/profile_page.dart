@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/futures/wallet_future_provider.dart';
+import '../core/streams/wallet_stream_provider.dart';
 import '../core/view_models/auth_view_model/auth_view_model_provider.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -69,7 +69,7 @@ class ProfilePage extends StatelessWidget {
               ),
               Consumer(
                 builder: (context, watch, child) {
-                  var walletStream = watch(walletFutureProvider);
+                  var walletStream = watch(walletStreamProvider);
                   return walletStream.when(
                     data: (wallet) => Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -96,7 +96,7 @@ class ProfilePage extends StatelessWidget {
                                             await  authModel
                                                   .refundRequestWalletAmount();
                                               context.refresh(
-                                                  walletFutureProvider);
+                                                  walletStreamProvider);
                                             },
                                       child: Text(wallet.refundRequested
                                           ? "REFUND REQUESTED"

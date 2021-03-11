@@ -107,7 +107,7 @@ class _AddressCardState extends State<AddressCard> {
                                   address: widget.address);
                               Navigator.pop(context);
                             },
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).accentColor,
                             child: Text('Yes'),
                           ),
                         ],

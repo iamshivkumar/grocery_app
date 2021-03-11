@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grocery_app/core/futures/orders_list_future_provider.dart';
-import 'package:grocery_app/core/futures/wallet_future_provider.dart';
+import 'package:grocery_app/core/streams/wallet_stream_provider.dart';
 import 'package:grocery_app/core/models/cartProduct.dart';
 import 'package:grocery_app/core/models/order.dart';
 import 'package:grocery_app/core/view_models/checkout_view_model/checkout_view_model_provider.dart';
@@ -173,9 +173,7 @@ class OrderDetailsPage extends StatelessWidget {
                                         paymentMethod: order.paymentMethod,
                                         price: order.totalPrice,
                                         walletAmount: order.walletAmount);
-                                        
                                 context.refresh(ordersListFutureProvider);
-                                context.refresh(walletFutureProvider);
                                 Navigator.pop(context);
                               },
                               color: Theme.of(context).accentColor,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:grocery_app/core/service/areas_polygons_provider.dart';
+import 'package:grocery_app/core/futures/areas_polygons_provider.dart';
 import 'package:grocery_app/core/view_models/address_view_model/address_view_model_provider.dart';
 
 class AddressPage extends ConsumerWidget {

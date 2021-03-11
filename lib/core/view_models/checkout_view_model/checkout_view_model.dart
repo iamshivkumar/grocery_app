@@ -118,7 +118,7 @@ class CheckoutViewModel extends ChangeNotifier {
   Future openCheckout(double amount) async {
     var options = {
       'key': 'rzp_test_KmPzyFK6pErbkC',
-      'amount': amount * 100,
+      'amount': (amount * 100).toInt(),
       'name': 'Grocery APP',
       'description': 'Fruits and Beries',
       'prefill': {

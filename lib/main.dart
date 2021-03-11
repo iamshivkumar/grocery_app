@@ -48,9 +48,11 @@ class MyApp extends ConsumerWidget {
     final Color accentColor = Color(0xFF4E598C);
     var base = ThemeData.light();
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       color: Colors.white,
       title: 'Grocery',
       theme: ThemeData(
+        
         scaffoldBackgroundColor: Color(0xFFFEF6EC),
         primaryColor: Color(0xFFFCAF58),
         primaryColorDark: Color(0xFFFF8C42),

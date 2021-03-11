@@ -11,10 +11,9 @@ class ProductsViewModel extends ChangeNotifier {
   List<Product> get products =>
       _snapshots.map((e) => Product.fromFirestore(doc: e)).toList();
   Future<void> getProducts() async {
-
     _snapshots = await _firestore
         .collection("products")
-        .where("active",isEqualTo: true)
+        .where("active", isEqualTo: true)
         .where(category == "Popular" ? "popular" : "category",
             isEqualTo: category == "Popular" ? true : category)
         .orderBy("name")
@@ -33,7 +32,7 @@ class ProductsViewModel extends ChangeNotifier {
       _snapshots = _snapshots +
           await _firestore
               .collection("products")
-              .where("active",isEqualTo: true)
+              .where("active", isEqualTo: true)
               .where(category == "Popular" ? "popular" : "category",
                   isEqualTo: category == "Popular" ? true : category)
               .orderBy("name")

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/models/product.dart';
 import 'package:grocery_app/core/view_models/cart_view_model/cart_view_model_provider.dart';
-import 'package:grocery_app/ui/cart_page.dart';
+import 'package:grocery_app/ui/widgets/cart_icon.dart';
 import 'package:grocery_app/ui/widgets/product_image_viewer.dart';
 
 class ProductPage extends StatelessWidget {
@@ -14,15 +14,7 @@ class ProductPage extends StatelessWidget {
       backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart_outlined),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => CartPage(),
-              ),
-            ),
-          ),
+          CartIcon()
         ],
         title: Text(product.name),
       ),

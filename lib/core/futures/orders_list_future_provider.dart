@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/models/order.dart';
 
-final ordersListFutureProvider = FutureProvider.autoDispose<List<Order>>(
+final ordersListFutureProvider = FutureProvider<List<Order>>(
   (ref) {
     User user = FirebaseAuth.instance.currentUser;
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    ref.maintainState = true;
-   
+
     return _firestore
         .collection('orders')
         .where("customerId", isEqualTo: user.uid)
