@@ -46,7 +46,7 @@ class AddressViewModel extends ChangeNotifier {
   );
   CameraPosition get position => _position;
   Marker _marker;
-  Set<Marker> get markers => _marker != null ? {_marker} : null;
+  Set<Marker> get markers => _marker != null ? {_marker} : {};
   String addressValue;
 
   void toggleMapType() {
