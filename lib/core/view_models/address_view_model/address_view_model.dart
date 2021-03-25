@@ -68,13 +68,13 @@ class AddressViewModel extends ChangeNotifier {
   bool _checkIfValidMarker(LatLng tap, List<LatLng> vertices) {
     int intersectCount = 0;
     for (int j = 0; j < vertices.length - 1; j++) {
-      if (rayCastIntersect(tap, vertices[j], vertices[j + 1])) {
+      if (_rayCastIntersect(tap, vertices[j], vertices[j + 1])) {
         intersectCount++;
       }
     }
     return ((intersectCount % 2) == 1);
   }
-  bool rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
+  bool _rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
     double aY = vertA.latitude;
     double bY = vertB.latitude;
     double aX = vertA.longitude;

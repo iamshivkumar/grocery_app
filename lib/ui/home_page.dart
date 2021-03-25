@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/view_models/products_pagination_view_model/products_pagination_view_model_provider.dart';
+import 'package:grocery_app/ui/search_page.dart';
 import 'package:grocery_app/ui/widgets/cart_icon.dart';
 import 'package:grocery_app/ui/widgets/custom_drawer.dart';
 import 'package:grocery_app/ui/widgets/product_card.dart';
@@ -36,6 +37,15 @@ class HomePage extends StatelessWidget {
             title: Text('Grocery App'),
             centerTitle: true,
             actions: [
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: ProductSearch(),
+                  );
+                },
+              ),
               CartIcon()
             ],
             bottom: TabBar(

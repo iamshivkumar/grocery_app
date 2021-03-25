@@ -259,6 +259,20 @@ class CheckoutViewModel extends ChangeNotifier {
           msg:
               "Amount added to your wallet. You can request for refund (Profile>>Refund)",
           timeInSecForIosWeb: 1);
+    } else if (walletAmount != 0) {
+      _firestore.collection("wallets").doc(_user.uid).update(
+        {
+          "amount": FieldValue.increment(                                                                                                                                                                                                                                                                                                                                                                                               walletAmount),
+          "payments": FieldValue.arrayUnion(
+            [
+              {
+                "id": paymentID,
+                "amount": walletAmount,
+              }
+            ],
+          ),
+        },
+      );
     }
   }
 }
