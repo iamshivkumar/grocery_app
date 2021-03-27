@@ -1,21 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/futures/initializer.dart';
 import 'package:grocery_app/ui/home_page.dart';
 import 'package:grocery_app/ui/intro_screen.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  ///initialize [Firebase] services
   await Firebase.initializeApp();
-  runApp(
-    /// All Flutter applications using Riverpod must contain a [ProviderScope] at the root of their widget tree
-    ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  runApp(ProviderScope(child: MyApp()));
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
 }
 
 class MyApp extends ConsumerWidget {
@@ -52,7 +53,6 @@ class MyApp extends ConsumerWidget {
       color: Colors.white,
       title: 'Grocery',
       theme: ThemeData(
-        
         scaffoldBackgroundColor: Color(0xFFFEF6EC),
         primaryColor: Color(0xFFFCAF58),
         primaryColorDark: Color(0xFFFF8C42),
@@ -79,7 +79,6 @@ class MyApp extends ConsumerWidget {
       ),
 
       ///if user app already seen shows [HomePage] else [IntroScreen] (Onboarding Screen)
-
       home: init.when(
         data: (seen) => seen ? HomePage() : IntroScreen(),
         loading: () => Container(

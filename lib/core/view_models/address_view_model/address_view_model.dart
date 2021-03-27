@@ -147,6 +147,7 @@ class AddressViewModel extends ChangeNotifier {
   }
 
   void getAddressInfo() async {
+    
     final coordinated =
         Coordinates(_marker.position.latitude, _marker.position.longitude);
     var addressInfo =
@@ -178,6 +179,7 @@ class AddressViewModel extends ChangeNotifier {
   }
 
   void addLocationAddress() {
+    if(_marker!=null&&addressValue!=null){
     _locationAddressList.add(
       LocationAddress(
           value: addressValue,
@@ -186,6 +188,7 @@ class AddressViewModel extends ChangeNotifier {
     );
     notifyListeners();
     saveLocationAddressList(_locationAddressList);
+    }
   }
 
   void editAddress() {

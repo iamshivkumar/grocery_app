@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:grocery_app/core/futures/areas_polygons_provider.dart';
-import 'package:grocery_app/core/view_models/address_view_model/address_view_model_provider.dart';
+import '../core/futures/areas_polygons_provider.dart';
+import '../core/view_models/address_view_model/address_view_model_provider.dart';
 
 class AddressPage extends ConsumerWidget {
   final bool forEdit;
@@ -136,8 +136,7 @@ class AddressPage extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SingleChildScrollView(
-                              child: Text(addressModel.addressValue??
-                                  "")),
+                              child: Text(addressModel.addressValue ?? "")),
                         ),
                       ),
                     ),

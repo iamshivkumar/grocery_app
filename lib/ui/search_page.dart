@@ -129,6 +129,8 @@ class ProductSearch extends SearchDelegate {
                     .toList();
             return ListView.builder(
               itemBuilder: (context, index) => ListTile(
+                leading: Icon(Icons.search),
+                trailing: Icon(Icons.north_west),
                 onTap: () {
                   query = suggestionList[index];
                   showResults(context);

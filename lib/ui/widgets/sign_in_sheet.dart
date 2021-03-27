@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:grocery_app/core/view_models/auth_view_model/auth_view_model_provider.dart';
 import 'package:grocery_app/core/enums/phone_auth_mode.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class SignInSheet {
@@ -18,10 +19,12 @@ class SignInSheet {
   }
 }
 
-class SignInCard extends ConsumerWidget {
+class SignInCard extends HookWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    var authModel = watch(authViewModelProvider);
+  Widget build(BuildContext context) {
+    var authModel = useProvider(authViewModelProvider);
+    var phoneController = useTextEditingController();
+    var otpController = useTextEditingController();
     return Material(
       color: Colors.white,
       child: Padding(
@@ -39,7 +42,7 @@ class SignInCard extends ConsumerWidget {
                     child: TextField(
                       maxLength: 10,
                       autofocus: true,
-                      controller: authModel.phoneNumberController,
+                      controller: phoneController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.call), prefixText: '+91 '),
@@ -52,6 +55,7 @@ class SignInCard extends ConsumerWidget {
                         ? MaterialButton(
                             onPressed: () {
                               authModel.sendOTP(
+                                phone: phoneController.text,
                                 onVerify: () => Navigator.pop(context),
                               );
                             },
@@ -82,8 +86,8 @@ class SignInCard extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: PinCodeTextField(
-                      onChanged: null,
-                      controller: authModel.smsController,
+                      onChanged: (v){},
+                      controller: otpController,
                       appContext: context,
                       autoDisposeControllers: false,
                       length: 6,
@@ -97,7 +101,7 @@ class SignInCard extends ConsumerWidget {
                     child: !authModel.loading
                         ? MaterialButton(
                             onPressed: () async {
-                              await authModel.verifyOTP();
+                              await authModel.verifyOTP(otp: otpController.text);
                               Navigator.pop(context);
                             },
                             colorBrightness: Brightness.dark,

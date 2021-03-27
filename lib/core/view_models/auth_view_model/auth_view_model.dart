@@ -8,8 +8,7 @@ import 'package:grocery_app/core/enums/phone_auth_mode.dart';
 class AuthViewModel extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User user = FirebaseAuth.instance.currentUser;
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController smsController = TextEditingController();
+
   String _verificationId;
   bool loading = false;
   PhoneAuthMode phoneAuthMode = PhoneAuthMode.EnterPhone;
@@ -19,12 +18,12 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sendOTP({VoidCallback onVerify}) async {
+  void sendOTP({VoidCallback onVerify,String phone}) async {
     loading = true;
     notifyListeners();
     try {
       await _auth.verifyPhoneNumber(
-        phoneNumber: "+91" + phoneNumberController.text,
+        phoneNumber: "+91" + phone,
         verificationCompleted: (PhoneAuthCredential credential) async {
           loading = true;
           notifyListeners();
@@ -60,13 +59,13 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> verifyOTP() async {
+  Future<void> verifyOTP({String otp}) async {
     loading = true;
     notifyListeners();
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId,
-        smsCode: smsController.text,
+        smsCode: otp,
       );
 
       user = (await _auth.signInWithCredential(credential)).user;
@@ -76,7 +75,7 @@ class AuthViewModel extends ChangeNotifier {
         backgroundColor: Color(0xFF4E598C),
       );
     } catch (e) {
-      print("Failed to sign in: " + e.toString());
+      print("Failed to sign in: " + e.code.toString());
     }
     loading = false;
     notifyListeners();

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_app/core/models/address.dart';
@@ -150,6 +151,7 @@ class CheckoutViewModel extends ChangeNotifier {
   }
 
   Future _placeOrder({bool paid, String paymentID}) async {
+    String token = await FirebaseMessaging.instance.getToken();
     try {
       _firestore.collection('orders').add(
         {
@@ -174,6 +176,7 @@ class CheckoutViewModel extends ChangeNotifier {
               GeoPoint(locationAddress.latitude, locationAddress.longitude),
           "paymentID": paymentID ?? "-",
           "walletAmount": walletAmount,
+          "token": token,
         },
       );
       Fluttertoast.showToast(msg: "Order Successful.");
@@ -262,7 +265,7 @@ class CheckoutViewModel extends ChangeNotifier {
     } else if (walletAmount != 0) {
       _firestore.collection("wallets").doc(_user.uid).update(
         {
-          "amount": FieldValue.increment(                                                                                                                                                                                                                                                                                                                                                                                               walletAmount),
+          "amount": FieldValue.increment(walletAmount),
           "payments": FieldValue.arrayUnion(
             [
               {

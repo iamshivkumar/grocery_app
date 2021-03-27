@@ -36,6 +36,35 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:812880352237:android:57fa74d07dec7d2e104de4",
+        "android_client_info": {
+          "package_name": "com.shivkumarkonade.delivery_boy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM-phaiw_EWacsx7DEtoYNc-pSfkgHGGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:812880352237:android:82b98eb049157100104de4",
         "android_client_info": {
           "package_name": "com.shivkumarkonade.green_grocery"

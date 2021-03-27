@@ -1,13 +1,19 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/view_models/products_pagination_view_model/products_pagination_view_model_provider.dart';
+import 'package:grocery_app/ui/orders_page.dart';
 import 'package:grocery_app/ui/search_page.dart';
 import 'package:grocery_app/ui/widgets/cart_icon.dart';
 import 'package:grocery_app/ui/widgets/custom_drawer.dart';
 import 'package:grocery_app/ui/widgets/product_card.dart';
-import 'cart_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   ///TODO: edit categories as per your store grocery products
   final List<String> categories = [
     'Popular',
@@ -17,6 +23,33 @@ class HomePage extends StatelessWidget {
     'Drinks',
     'Snacks'
   ];
+  @override
+  void initState() {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    messaging.subscribeToTopic("order");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            actions: [Image.network(message.notification.android.imageUrl)],
+            title: Text(message.notification.title),
+            content: Text(message.notification.body),
+          ),
+        );
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OrdersPage(),
+        ),
+      );
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomDrawer(
