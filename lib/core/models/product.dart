@@ -28,15 +28,16 @@ class Product {
   factory Product.fromFirestore({DocumentSnapshot doc}) {
     Map data = doc.data();
     return Product(
-        id: doc.id,
-        name: data['name'],
-        price: data['price'],
-        description: data['description'],
-        images: data['images'],
-        amount: data['amount'],
-        quantity: data['quantity'],
-        active: data['active'],
-        category: data['category'],
-        popular: data['popular']);
+      id: doc.id,
+      name: data['name'],
+      price: data['price'],
+      description: data['description'],
+      images: data['images'],
+      amount: data['amount'],
+      quantity: data['quantity'],
+      active: data['active'],
+      category: data['category'],
+      popular: data['popular'],
+    );
   }
 }
